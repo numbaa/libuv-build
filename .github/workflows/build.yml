@@ -67,3 +67,31 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: libuv.linux.${{ github.ref_name }}.tar.gz
+  macOS:
+    permissions:
+      contents: write
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: libuv/libuv
+          ref: v1.44.1
+          path: libuv
+      - name: Build
+        run: |
+          cd libuv
+          mkdir build
+          cd build
+          cmake .. -B Release -DCMAKE_BUILD_TYPE=Release -DLIBUV_BUILD_TESTS=OFF -DLIBUV_BUILD_BENCH=OFF
+          cmake --build Release
+          cmake --install Release/ --prefix install/Release
+      - name: Generate tar
+        run: |
+          echo ${{ github.sha }} > Release.txt
+          cp Release.txt ./libuv/build/install/Release
+          tar -czvf libuv.macos.${{ github.ref_name }}.tar.gz -C ./libuv/build/install/Release .
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: libuv.macos.${{ github.ref_name }}.tar.gz

@@ -90,8 +90,8 @@ jobs:
         run: |
           echo ${{ github.sha }} > Release.txt
           cp Release.txt ./libuv/build/install/Release
-          tar -czvf libuv.macos.${{ github.ref_name }}.tar.gz -C ./libuv/build/install/Release .
+          tar -czvf libuv.mac.${{ github.ref_name }}.tar.gz -C ./libuv/build/install/Release .
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: libuv.macos.${{ github.ref_name }}.tar.gz
+          files: libuv.mac.${{ github.ref_name }}.tar.gz
